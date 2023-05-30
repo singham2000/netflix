@@ -91,16 +91,68 @@ const Container = styled.div`
     position: fixed;
     top: 0;
     height: 6.8rem;
-    width: 100vw;
+    width: 90%;
     justify-content: space-between;
     padding: 0 4rem;
     align-items: center;
+    z-index:2;
     .left {
-      gap: 2rem;
+      gap: 1rem;
       .brand {
         img {
             height: 4rem;
             width: 9.25rem;
+        }
+      }
+    }
+    .right {
+      gap: 1rem;
+      button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:focus {
+          outline: none;
+        }
+        svg{
+          color:white;
+          font-size:1.2rem;
+        }
+      }
+      .search {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+        padding: 0.2rem 0.2rem 0.2rem 0.5rem;
+        .button {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      input {
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s ease-in-out;
+        background-color: transparent;
+        border: none;
+        color: white;
+        &:focus {
+          outline: none;
+        }
+      }
+      .show_search {
+        border: 1px solid white;
+        background-color: rgba(0,0,0,0.5);
+        input{
+          width:100%;
+          opacity:1;
+          visibility:visible;
+          padding: 0.3rem;
         }
       }
     }
@@ -116,51 +168,5 @@ const Container = styled.div`
       }
     }
   }
-  .right {
-    gap: 1rem;
-    button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      &:focus {
-        outline: none;
-      }
-    }
-    .search {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-      padding: 0.2rem 0.2rem 0.2rem 0.5rem;
-      .button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-    input {
-      width: 0;
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.3s ease-in-out;
-      background-color: transparent;
-      border: none;
-      color: white;
-      &:focus {
-        outline: none;
-      }
-    }
-    .show_search {
-      border: 1px solid white;
-      background-color: rgba(0,0,0,0.5);
-      input{
-        width:100%
-        opacity:1;
-        visibility:visible;
-        padding: 0.3rem;
-      }
-    }
-  }
+
 `;

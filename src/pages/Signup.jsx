@@ -7,8 +7,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
-import { current } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
+
 const Signup = () => {
   const navigate = useNavigate();
   const [showpassword, setShowpassword] = useState(false);
@@ -36,8 +36,8 @@ const Signup = () => {
         // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
+        console.log(errorMessage);
         // ..
       });
     onAuthStateChanged(firebaseAuth, (currentUser) => {
