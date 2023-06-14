@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import styled from "styled-components";
 import Home from "../assets/home.jpg";
@@ -6,9 +6,18 @@ import MovieLogo from "../assets/homeTitle.webp";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getGenres } from "../store";
 
 const Netflix = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getGenres())
+  })
+  
+
   const [isScrolled, setIsScrolled] = React.useState(false);
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
@@ -29,12 +38,12 @@ const Netflix = () => {
               className="flex j-center a-center"
             >
               <FaPlay />
-              {/* playing */}
+              Play
             </button>
 
             <button className="flex j-center a-center">
               <AiOutlineInfoCircle />
-              {/* More Info */}
+              More Info
             </button>
           </div>
         </div>
@@ -68,7 +77,7 @@ const Container = styled.div`
       }
     }
   }
-  .buttons {
+  .button {
     margin: 5em;
     gap: 2rem;
     button {

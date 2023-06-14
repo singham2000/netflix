@@ -20,9 +20,11 @@ const Player = () => {
 
 export default Player;
 const Container = styled.div`
+  height: 100vh;
   .player {
-    width: 100%;
+    position: relative;
     height: 100%;
+    width: 100%;
     .back {
       position: absolute;
       padding: 2rem;

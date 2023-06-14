@@ -70,6 +70,7 @@ export default function Navbar({ isScrolled }) {
                 setInputHover(false);
               }}
             />
+          </div>
             <button
               onClick={() => {
                 signOut(firebaseAuth);
@@ -77,7 +78,6 @@ export default function Navbar({ isScrolled }) {
             >
               <FaPowerOff />
             </button>
-          </div>
         </div>
       </nav>
     </Container>
