@@ -23,19 +23,29 @@ export const getGenres = createAsyncThunk("netflix/genres", async () => {
 const createArrayFromData = (array, movieArray, genres) => {
   array.forEach((movie) => {
     const movieGenres = [];
-    movie.genre_ids.forEach((genres) => {
-      const name = genres.find(({ id }) => id === genres);
+    movie.genre_ids.forEach((id) => {
+      const name = genres.find(({ id }) => id === genres.id);
+      if (name) movieGenres.push(name.name);
     });
+    if (movie.backdrop_path) {
+      movieArray.push({
+        id: movie.id,
+        name: movie?.orignal_name ? movie.original_name : movie.orignal_title,
+        image: movie.backdrop_path,
+        genres: movieGenres.slice(0, 3),
+      });
+    }
   });
 };
 
-const getRawData = (api, genres, paging) => {
+const getRawData = async (api, genres, paging) => {
   const movieArray = [];
   for (let loop = 1; movieArray < 60 && loop < 10; loop++) {
-    const { data: results } = axios.get(
-      `${api}${paging ? `&page=${loop}` : ""}`
-    );
+    const {
+      data: { results },
+    } = await axios.get(`${api}${paging ? `&page=${loop}` : ""}`);
     createArrayFromData(results, movieArray, genres);
+
     return movieArray;
   }
 };
@@ -45,11 +55,13 @@ export const fetchMovies = createAsyncThunk(
     const {
       netflix: { genres },
     } = thunkAPI.getState();
-    return getRawData(
-      `${TMDB_BASE_URL}/discover/${type}?api_key=${API_KEY}`,
+
+    const data = getRawData(
+      `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}`,
       genres,
       true
     );
+    console.log(data);
   }
 );
 

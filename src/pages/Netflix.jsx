@@ -6,17 +6,19 @@ import MovieLogo from "../assets/homeTitle.webp";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getGenres } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMovies, getGenres } from "../store";
 
 const Netflix = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
   useEffect(() => {
-    dispatch(getGenres())
-  })
-  
+    dispatch(getGenres());
+  });
+  useEffect(() => {
+    if (genresLoaded) dispatch(fetchMovies({ type: "all" }));
+  });
 
   const [isScrolled, setIsScrolled] = React.useState(false);
   window.onscroll = () => {
