@@ -1,146 +1,112 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import BackgroundImage from "../components/BackgroudImage";
-import Header from "../components/Header";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { firebaseAuth } from "../utils/firebase-config";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const Signup = () => {
-  const navigate = useNavigate();
-  const [showpassword, setShowpassword] = useState(false);
-  const [formValues, setformValues] = useState({
+import styled from "styled-components";
+import BackgroundImage from "../components/BackgroundImage";
+import Header from "../components/Header";
+import { firebaseAuth } from "../utils/firebase-config";
+function Signup() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [formValues, setFormValues] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleSignIn = async () => {
-    console.log(
-      `formValues.email ${formValues.email}`,
-      `formValues.password ${formValues.password}`
-    );
-
-    createUserWithEmailAndPassword(
-      firebaseAuth,
-      formValues.email,
-      formValues.password
-    )
-      .then((userCredential) => {
-        console.log(userCredential);
-        // Signed in
-        const user = userCredential.user;
-        console.log("User Details", user);
-        // ...
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        // ..
-      });
-    onAuthStateChanged(firebaseAuth, (currentUser) => {
-      if (currentUser) {
-        navigate("/");
-      }
-    });
+    try {
+      const { email, password } = formValues;
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    if (currentUser) navigate("/");
+  });
+
   return (
-    <Container showpassword={showpassword}>
+    <Container showPassword={showPassword}>
       <BackgroundImage />
       <div className="content">
-        <Header signup />
-        <div className="body flex columnn a-center j-center">
-          <div className="text flex column a-center j-center">
-            <h1>Unlimited movies, TV shows and more</h1>
-            <h4>Watch anywhere, Cancel Anytime</h4>
+        <Header login />
+        <div className="body flex column a-center j-center">
+          <div className="text flex column">
+            <h1>Unlimited movies, TV shows and more.</h1>
+            <h4>Watch anywhere. Cancel anytime.</h4>
             <h6>
-              Ready to watch? Enter your email to create or restart membership
+              Ready to watch? Enter your email to create or restart membership.
             </h6>
-
-            <div className="form">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Email Address"
-                value={formValues.email}
-                onChange={(e) => {
-                  // console.log(e)
-                  setformValues({
-                    ...formValues,
-                    [e.target.id]: e.target.value,
-                  });
-                }}
-              />
-              {showpassword && (
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  value={formValues.pass}
-                  onChange={(e) =>
-                    setformValues({
-                      ...formValues,
-                      [e.target.id]: e.target.value,
-                    })
-                  }
-                />
-              )}
-
-              {!showpassword && (
-                <button
-                  onClick={() => setShowpassword(true)}
-                  className="button"
-                >
-                  Get Started
-                </button>
-              )}
-            </div>
-            <button className="button-login" onClick={handleSignIn}>
-              Login
-            </button>
           </div>
+          <div className="form">
+            <input
+              type="email"
+              placeholder="Email address"
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  [e.target.name]: e.target.value,
+                })
+              }
+              name="email"
+              value={formValues.email}
+            />
+            {showPassword && (
+              <input
+                type="password"
+                placeholder="Password"
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    [e.target.name]: e.target.value,
+                  })
+                }
+                name="password"
+                value={formValues.password}
+              />
+            )}
+            {!showPassword && (
+              <button onClick={() => setShowPassword(true)}>Get Started</button>
+            )}
+          </div>
+          {showPassword && <button onClick={handleSignIn}>Log In</button>}
         </div>
       </div>
     </Container>
   );
-};
-
-export default Signup;
+}
 
 const Container = styled.div`
   position: relative;
   .content {
     position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     height: 100vh;
     width: 100vw;
     display: grid;
-    grid-template-rows: 1fr 5fr;
-    top: 0;
-    left: 0;
-    background-color: rgb(0, 0, 0, 0.5);
+    grid-template-rows: 15vh 85vh;
     .body {
       gap: 1rem;
-      text-align: center;
-      font-size: 1rem;
       .text {
-        font-size: 1rem;
+        gap: 1rem;
+        text-align: center;
+        font-size: 2rem;
         h1 {
           padding: 0 25rem;
         }
       }
       .form {
         display: grid;
-        grid-template-columns: ${({ showpassword }) =>
-          showpassword ? "1fr 1fr" : "2fr 1fr"};
-
-        width: 68%;
+        grid-template-columns: ${({ showPassword }) =>
+          showPassword ? "1fr 1fr" : "2fr 1fr"};
+        width: 60%;
         input {
-          text-align: center;
           color: black;
           border: none;
           padding: 1.5rem;
@@ -150,30 +116,28 @@ const Container = styled.div`
             outline: none;
           }
         }
-        .button {
-          padding: 1.5rem 1rem;
-          margin: 0;
+        button {
+          padding: 0.5rem 1rem;
           background-color: #e50914;
           border: none;
           cursor: pointer;
-          border-radius: 0;
-          font-weight: bolder;
-          font-size: 1rem;
           color: white;
+          font-weight: bolder;
+          font-size: 1.05rem;
         }
       }
-    }
-    .button-login {
-      padding: 1.5rem 3rem;
-      margin-top: 1rem;
-      background-color: #e50914;
-      border: none;
-      cursor: pointer;
-      border-radius: 0;
-      font-weight: bolder;
-      font-size: 1rem;
-      color: white;
-      border-radius: 5px;
+      button {
+        padding: 0.5rem 1rem;
+        background-color: #e50914;
+        border: none;
+        cursor: pointer;
+        color: white;
+        border-radius: 0.2rem;
+        font-weight: bolder;
+        font-size: 1.05rem;
+      }
     }
   }
 `;
+
+export default Signup;

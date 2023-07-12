@@ -1,55 +1,41 @@
-import React from "react";
-import Logo from "../assets/logo.png";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { FaSearch, FaPowerOff } from "react-icons/fa";
 import { signOut } from "firebase/auth";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../assets/logo.png";
 import { firebaseAuth } from "../utils/firebase-config";
+import { FaPowerOff, FaSearch } from "react-icons/fa";
 export default function Navbar({ isScrolled }) {
-  const [showSearch, setShowSearch] = React.useState(false);
-  const [inputHover, setInputHover] = React.useState(false);
-
+  const [showSearch, setShowSearch] = useState(false);
+  const [inputHover, setInputHover] = useState(false);
   const links = [
-    {
-      name: "Home",
-      link: "/",
-    },
-    {
-      name: "Movies",
-      link: "/movies",
-    },
-    {
-      name: "TV Shows",
-      link: "/tv",
-    },
-    {
-      name: "My List",
-      link: "/mylist",
-    },
+    { name: "Home", link: "/" },
+    { name: "TV Shows", link: "/tv" },
+    { name: "Movies", link: "/movies" },
+    { name: "My List", link: "/mylist" },
   ];
+
   return (
     <Container>
       <nav className={`${isScrolled ? "scrolled" : ""} flex`}>
-        <div className="flex left a-center">
-          <div className="a-center j-center brand flex">
-            <div className="brand flex a-center j-center">
-              <img src={Logo} alt="Netflix" />
-            </div>
-            <ul className="links flex">
-              {links.map((link) => (
-                <li key={link.name}>
-                  <Link to={link.link}>{link.name}</Link>
-                </li>
-              ))}
-            </ul>
+        <div className="left flex a-center">
+          <div className="brand flex a-center j-center">
+            <img src={logo} alt="Logo" />
           </div>
+          <ul className="links flex">
+            {links.map(({ name, link }) => {
+              return (
+                <li key={name}>
+                  <Link to={link}>{name}</Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
         <div className="right flex a-center">
-          <div className={`${showSearch ? "show_search" : ""} search`}>
+          <div className={`search ${showSearch ? "show-search" : ""}`}>
             <button
-              onFocus={() => {
-                setShowSearch(true);
-              }}
+              onFocus={() => setShowSearch(true)}
               onBlur={() => {
                 if (!inputHover) {
                   setShowSearch(false);
@@ -60,8 +46,6 @@ export default function Navbar({ isScrolled }) {
             </button>
             <input
               type="text"
-              name="Search"
-              id="Search"
               placeholder="Search"
               onMouseEnter={() => setInputHover(true)}
               onMouseLeave={() => setInputHover(false)}
@@ -71,37 +55,46 @@ export default function Navbar({ isScrolled }) {
               }}
             />
           </div>
-            <button
-              onClick={() => {
-                signOut(firebaseAuth);
-              }}
-            >
-              <FaPowerOff />
-            </button>
+          <button onClick={() => signOut(firebaseAuth)}>
+            <FaPowerOff />
+          </button>
         </div>
       </nav>
     </Container>
   );
 }
+
 const Container = styled.div`
   .scrolled {
-    background: black;
+    background-color: black;
   }
   nav {
+    position: sticky;
+    top: 0;
+    height: 6.5rem;
+    width: 100%;
+    justify-content: space-between;
     position: fixed;
     top: 0;
-    height: 6.8rem;
-    width: 90%;
-    justify-content: space-between;
+    z-index: 2;
     padding: 0 4rem;
     align-items: center;
-    z-index:2;
+    transition: 0.3s ease-in-out;
     .left {
-      gap: 1rem;
+      gap: 2rem;
       .brand {
         img {
-            height: 4rem;
-            width: 9.25rem;
+          height: 4rem;
+        }
+      }
+      .links {
+        list-style-type: none;
+        gap: 2rem;
+        li {
+          a {
+            color: white;
+            text-decoration: none;
+          }
         }
       }
     }
@@ -114,59 +107,52 @@ const Container = styled.div`
         &:focus {
           outline: none;
         }
-        svg{
-          color:white;
-          font-size:1.2rem;
+        svg {
+          color: #f34242;
+          font-size: 1.2rem;
         }
       }
       .search {
         display: flex;
         gap: 0.4rem;
         align-items: center;
-        padding: 0.2rem 0.2rem 0.2rem 0.5rem;
-        .button {
+        justify-content: center;
+        padding: 0.2rem;
+        padding-left: 0.5rem;
+        button {
           background-color: transparent;
           border: none;
-          cursor: pointer;
+          &:focus {
+            outline: none;
+          }
+          svg {
+            color: white;
+            font-size: 1.2rem;
+          }
+        }
+        input {
+          width: 0;
+          opacity: 0;
+          visibility: hidden;
+          transition: 0.3s ease-in-out;
+          background-color: transparent;
+          border: none;
+          color: white;
           &:focus {
             outline: none;
           }
         }
       }
-      input {
-        width: 0;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.3s ease-in-out;
-        background-color: transparent;
-        border: none;
-        color: white;
-        &:focus {
-          outline: none;
-        }
-      }
-      .show_search {
+      .show-search {
         border: 1px solid white;
-        background-color: rgba(0,0,0,0.5);
-        input{
-          width:100%;
-          opacity:1;
-          visibility:visible;
+        background-color: rgba(0, 0, 0, 0.6);
+        input {
+          width: 100%;
+          opacity: 1;
+          visibility: visible;
           padding: 0.3rem;
         }
       }
     }
   }
-  .links {
-    list-style: none;
-    gap: 2rem;
-
-    li {
-      a {
-        color: white;
-        text-decoration: none;
-      }
-    }
-  }
-
 `;
