@@ -10,13 +10,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
 import video from "../assets/video.mp4";
 
-export default React.memo(function Card({ index, movieData, isLiked = false }) {
+export default React.memo(function Card({ movieData, isLiked = false }) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [email, setEmail] = useState(undefined);
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
-    console.log(email);
     if (currentUser) {
       setEmail(currentUser.email);
     } else navigate("/login");

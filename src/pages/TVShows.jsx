@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
-import CardSlider from "../components/CardSlider";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
 import { useNavigate } from "react-router-dom";
@@ -15,19 +14,20 @@ function TVShows() {
   const movies = useSelector((state) => state.netflix.movies);
   const genres = useSelector((state) => state.netflix.genres);
   const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
-  const dataLoading = useSelector((state) => state.netflix.dataLoading);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!genres.length) dispatch(getGenres());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (genresLoaded) {
       dispatch(fetchMovies({ genres, type: "tv" }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [genresLoaded]);
 
   const [user, setUser] = useState(undefined);
@@ -35,6 +35,7 @@ function TVShows() {
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (currentUser) setUser(currentUser.uid);
     else navigate("/login");
+    if(user) ;
   });
 
   window.onscroll = () => {

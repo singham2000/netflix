@@ -23,12 +23,14 @@ function Netflix() {
 
   useEffect(() => {
     dispatch(getGenres());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (genresLoaded) {
       dispatch(fetchMovies({ genres, type: "all" }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [genresLoaded]);
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {

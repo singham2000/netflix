@@ -8,17 +8,27 @@ import { firebaseAuth } from "../utils/firebase-config";
 
 function Login() {
   const [email, setEmail] = useState("");
+  const [validator, setValidator] = useState(false);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    console.log(email, password);
-    try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
-    } catch (error) {
-      console.log(error.code);
+  const regexEmail = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
+
+
+  async function handleLogin() {
+    const emailTest = regexEmail.test(email);
+    console.log("Email test", emailTest);
+    if (emailTest) {
+      setValidator(true);
+      try {
+        await signInWithEmailAndPassword(firebaseAuth, email, password);
+      } catch (error) {
+        console.log(error.code);
+      }
+    } else {
+      setValidator(false);
     }
-  };
+  }
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (currentUser) navigate("/");
@@ -41,6 +51,8 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
+              {validator ? <p style={{ color: "red" }}>*Invalid Email</p> : ""}
+
               <input
                 type="password"
                 placeholder="Password"
